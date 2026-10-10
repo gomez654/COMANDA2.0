@@ -5,6 +5,7 @@ import HeroSection from './components/HeroSection'
 import MenuSection from './components/MenuSection'
 import SiteHeader from './components/SiteHeader'
 import OrderLookup from './components/OrderLookup'
+import EmployeePanel from './components/EmployeePanel'
 import { products } from './data/products'
 
 const CART_STORAGE_KEY = 'comanda-react-cart-v1'
@@ -32,6 +33,7 @@ function readSavedOrders() {
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('todos')
+  const [activeView, setActiveView] = useState('cliente')
   const [cartItems, setCartItems] = useState(readSavedCart)
   const [orders, setOrders] = useState(readSavedOrders)
   const [deliveryType, setDeliveryType] = useState('retiro')
@@ -80,6 +82,12 @@ function App() {
       .filter((item) => item.quantity > 0))
   }
 
+  function updateOrderStatus(orderNumber, status) {
+    setOrders((currentOrders) => currentOrders.map((order) => (
+      order.number === orderNumber ? { ...order, status } : order
+    )))
+  }
+
   function checkout(event) {
     event.preventDefault()
     if (cartLines.length === 0) return
@@ -110,8 +118,10 @@ function App() {
 
   return (
     <>
-      <SiteHeader cartCount={cartCount} />
+      <SiteHeader cartCount={cartCount} activeView={activeView} onViewChange={setActiveView} />
       <main>
+        {activeView === 'cliente' ? (
+          <>
         <HeroSection productCount={products.length} />
         <MenuSection
           activeCategory={activeCategory}
@@ -140,6 +150,10 @@ function App() {
           </Container>
         </section>
         <OrderLookup orders={orders} />
+          </>
+        ) : (
+          <EmployeePanel orders={orders} onStatusChange={updateOrderStatus} />
+        )}
       </main>
       <footer className="site-footer">
         <Container>
