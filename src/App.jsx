@@ -4,9 +4,11 @@ import CartPanel from './components/CartPanel'
 import HeroSection from './components/HeroSection'
 import MenuSection from './components/MenuSection'
 import SiteHeader from './components/SiteHeader'
+import OrderLookup from './components/OrderLookup'
 import { products } from './data/products'
 
 const CART_STORAGE_KEY = 'comanda-react-cart-v1'
+const ORDER_STORAGE_KEY = 'comanda-react-orders-v1'
 
 function readSavedCart() {
   try {
@@ -19,9 +21,19 @@ function readSavedCart() {
   }
 }
 
+function readSavedOrders() {
+  try {
+    const savedOrders = JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY) || '[]')
+    return Array.isArray(savedOrders) ? savedOrders : []
+  } catch {
+    return []
+  }
+}
+
 function App() {
   const [activeCategory, setActiveCategory] = useState('todos')
   const [cartItems, setCartItems] = useState(readSavedCart)
+  const [orders, setOrders] = useState(readSavedOrders)
   const [deliveryType, setDeliveryType] = useState('retiro')
   const [cartMessage, setCartMessage] = useState('')
   const [confirmation, setConfirmation] = useState('')
@@ -29,6 +41,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems))
   }, [cartItems])
+
+  useEffect(() => {
+    localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(orders))
+  }, [orders])
 
   const visibleProducts = products.filter((product) => (
     activeCategory === 'todos' || product.category === activeCategory
@@ -69,9 +85,23 @@ function App() {
     if (cartLines.length === 0) return
     const formData = new FormData(event.currentTarget)
     const customerName = String(formData.get('customer') || '').trim()
-    const orderNumber = String(Date.now()).slice(-6)
+    const customerPhone = String(formData.get('phone') || '').trim()
+    const lastOrderNumber = orders.reduce((highest, order) => Math.max(highest, Number(order.number) || 1000), 1000)
+    const orderNumber = String(lastOrderNumber + 1)
     const deliveryLabel = deliveryType === 'retiro' ? 'retiro por el local' : 'entrega a domicilio'
-    setConfirmation(`Pedido #${orderNumber} generado para ${customerName}, con ${deliveryLabel}.`)
+    const order = {
+      number: orderNumber,
+      customerName,
+      phone: customerPhone,
+      deliveryType,
+      address: deliveryType === 'domicilio' ? String(formData.get('address') || '').trim() : '',
+      status: 'NUEVO',
+      createdAt: new Date().toISOString(),
+      items: cartLines.map(({ id, name, price, quantity }) => ({ id, name, price, quantity })),
+      total: cartLines.reduce((total, item) => total + item.price * item.quantity, 0),
+    }
+    setOrders((currentOrders) => [order, ...currentOrders])
+    setConfirmation(`Pedido #${orderNumber} generado para ${customerName}, con ${deliveryLabel}. Consultá su estado en Seguimiento.`)
     setCartItems([])
     setCartMessage('')
     event.currentTarget.reset()
@@ -109,6 +139,7 @@ function App() {
             </div>
           </Container>
         </section>
+        <OrderLookup orders={orders} />
       </main>
       <footer className="site-footer">
         <Container>

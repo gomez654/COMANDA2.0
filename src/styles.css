@@ -628,7 +628,203 @@ select {
   text-align: center;
 }
 
-.site-footer {
+  .order-lookup-section {
+    padding: 64px 0 76px;
+    background: #f7f8f4;
+  }
+
+  .order-lookup-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(340px, 1.1fr);
+    align-items: start;
+    gap: 42px;
+  }
+
+  .order-lookup-intro h2 {
+    max-width: 420px;
+    margin: 0 0 12px;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 600;
+  }
+
+  .order-lookup-intro > p:last-child {
+    max-width: 390px;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .order-lookup-card {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .order-lookup-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 14px;
+  }
+
+  .order-lookup-form .form-label {
+    margin-bottom: 6px;
+    color: #46584e;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .order-lookup-form .form-control {
+    min-height: 42px;
+    border-color: #dce4dd;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+
+  .order-lookup-form .form-text {
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .order-lookup-button {
+    min-height: 42px;
+    border: 0;
+    border-radius: 5px;
+    padding: 9px 14px;
+    color: #fff;
+    background: var(--forest);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .order-lookup-button:hover,
+  .order-lookup-button:focus-visible {
+    color: #fff;
+    background: var(--forest-dark);
+  }
+
+  .order-lookup-alert {
+    margin: 16px 0 0;
+    font-size: 12px;
+  }
+
+  .order-lookup-result {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .order-result-heading {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .order-result-heading > div {
+    display: grid;
+    gap: 5px;
+  }
+
+  .order-result-heading > div span {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .order-result-heading > div strong {
+    color: var(--ink);
+    font-size: 16px;
+  }
+
+  .order-type-label {
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: var(--forest-dark);
+    background: var(--mint);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .order-status-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 8px;
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .order-status-step {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #87938b;
+    font-size: 10px;
+  }
+
+  .status-step-marker {
+    display: grid;
+    flex: 0 0 23px;
+    width: 23px;
+    height: 23px;
+    place-items: center;
+    border: 1px solid #dce4dd;
+    border-radius: 50%;
+    color: #68766f;
+    font-size: 9px;
+    font-weight: 700;
+  }
+
+  .order-status-step.is-complete {
+    color: var(--forest);
+  }
+
+  .order-status-step.is-complete .status-step-marker,
+  .order-status-step.is-current .status-step-marker {
+    border-color: var(--forest);
+    color: #fff;
+    background: var(--forest);
+  }
+
+  .order-status-step.is-current {
+    color: var(--forest-dark);
+    font-weight: 700;
+  }
+
+  .order-result-items {
+    display: grid;
+    gap: 9px;
+    padding: 14px 0;
+    border-top: 1px solid #edf0ed;
+  }
+
+  .order-result-items > div,
+  .order-result-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #53635a;
+    font-size: 11px;
+  }
+
+  .order-result-items strong,
+  .order-result-total strong {
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .order-result-total {
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 13px;
+  }
+
+  .site-footer {
   padding: 22px 0;
   color: #dce9e0;
   background: var(--forest-dark);
@@ -664,6 +860,11 @@ select {
   .order-layout {
     grid-template-columns: 1fr;
     gap: 26px;
+  }
+
+  .order-lookup-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .cart-panel {
