@@ -1074,6 +1074,111 @@ select {
   text-align: center;
 }
 
+.delivery-order-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.delivery-order {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.delivery-destination {
+  display: grid;
+  gap: 5px;
+  padding: 15px 0;
+}
+
+.delivery-destination-label {
+  color: var(--forest);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.delivery-destination > strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.delivery-destination > span:last-child {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.delivery-order-footer {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+}
+
+.delivery-order-footer > div {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.delivery-order-footer > div strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.delivery-action-button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 5px;
+  padding: 9px 12px;
+  color: #fff;
+  background: var(--forest);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.delivery-action-button:hover,
+.delivery-action-button:focus-visible {
+  color: #fff;
+  background: var(--forest-dark);
+}
+
+.delivered-orders {
+  margin-top: 24px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.delivered-orders summary {
+  padding: 14px 16px;
+  color: var(--forest-dark);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.delivered-order-list {
+  display: grid;
+  padding: 0 16px 12px;
+}
+
+.delivered-order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #edf0ed;
+  color: #53635a;
+  font-size: 11px;
+}
+
 .site-footer .container {
   display: flex;
   flex-wrap: wrap;
@@ -1149,6 +1254,24 @@ select {
 
   .employee-status-control {
     width: 100%;
+  }
+
+  .delivery-order-list {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-order-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .delivery-action-button {
+    width: 100%;
+  }
+
+  .delivered-order-row {
+    align-items: start;
+    flex-direction: column;
   }
 }
 

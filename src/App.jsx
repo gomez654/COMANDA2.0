@@ -6,6 +6,7 @@ import MenuSection from './components/MenuSection'
 import SiteHeader from './components/SiteHeader'
 import OrderLookup from './components/OrderLookup'
 import EmployeePanel from './components/EmployeePanel'
+import DeliveryPanel from './components/DeliveryPanel'
 import { products } from './data/products'
 
 const CART_STORAGE_KEY = 'comanda-react-cart-v1'
@@ -151,8 +152,10 @@ function App() {
         </section>
         <OrderLookup orders={orders} />
           </>
-        ) : (
+        ) : activeView === 'empleado' ? (
           <EmployeePanel orders={orders} onStatusChange={updateOrderStatus} />
+        ) : (
+          <DeliveryPanel orders={orders} onStatusChange={updateOrderStatus} />
         )}
       </main>
       <footer className="site-footer">
