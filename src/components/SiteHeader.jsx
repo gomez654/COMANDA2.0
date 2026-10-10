@@ -19,11 +19,25 @@ export default function SiteHeader({ cartCount, activeView, onViewChange }) {
                 <Nav.Link as="button" type="button" onClick={() => onViewChange('empleado')}>
                   Panel de empleado
                 </Nav.Link>
+                <Nav.Link as="button" type="button" onClick={() => onViewChange('repartidor')}>
+                  Panel de repartidor
+                </Nav.Link>
               </>
             ) : (
-              <Nav.Link as="button" type="button" onClick={() => onViewChange('cliente')}>
-                Volver al menú
-              </Nav.Link>
+              <>
+                <Nav.Link as="button" type="button" onClick={() => onViewChange('cliente')}>
+                  Volver al menú
+                </Nav.Link>
+                {activeView === 'empleado' ? (
+                  <Nav.Link as="button" type="button" onClick={() => onViewChange('repartidor')}>
+                    Panel de repartidor
+                  </Nav.Link>
+                ) : (
+                  <Nav.Link as="button" type="button" onClick={() => onViewChange('empleado')}>
+                    Panel de empleado
+                  </Nav.Link>
+                )}
+              </>
             )}
           </Nav>
           {activeView === 'cliente' && (
