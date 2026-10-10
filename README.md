@@ -1,16 +1,115 @@
-# React + Vite
+# COMANDA Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+COMANDA es un sistema web para centralizar los pedidos y las ventas de un local de comida. Esta versión frontend fue migrada a React + Vite y permite recorrer el flujo desde que un cliente arma un pedido hasta que el repartidor lo entrega.
 
-Currently, two official plugins are available:
+## Equipo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Lazarte Gastón
+- Lazarte Karina Daniela
+- Gómez Gonzalo Benjamín
 
-## React Compiler
+## Tecnologías
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React y JavaScript
+- Vite
+- React Bootstrap y Bootstrap 5
+- CSS responsive
+- Oxlint
+- `localStorage` para guardar los datos de demostración en el navegador
 
-## Expanding the Oxlint configuration
+## Requisitos
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- Node.js 20.19+ o 22.12+
+- npm
+
+## Instalación y desarrollo
+
+Desde la carpeta `comanda-frontend`, instalar las dependencias y levantar el servidor local:
+
+```bash
+npm install
+npm run dev
+```
+
+Vite mostrará en la terminal la dirección local para abrir COMANDA.
+
+## Funcionalidades
+
+### Cliente
+
+- Explorar el catálogo por categorías.
+- Agregar productos al carrito y ajustar cantidades respetando el stock.
+- Elegir retiro por el local o envío a domicilio.
+- Confirmar un pedido y recibir su número.
+- Consultar el estado y el detalle del pedido.
+
+### Empleado
+
+- Consultar los pedidos registrados.
+- Actualizar la preparación: recibido, confirmado, en preparación y listo.
+
+### Repartidor
+
+- Consultar los pedidos a domicilio listos para retirar o en camino.
+- Iniciar una entrega y marcarla como entregada.
+
+### Administrador
+
+- Consultar métricas de ventas, pedidos, productos activos y stock bajo.
+- Crear, editar y eliminar productos.
+- Actualizar precios, categorías, descripciones, stock y disponibilidad.
+
+## Accesos de demostración
+
+| Rol | Usuario | Contraseña |
+| --- | --- | --- |
+| Empleado | `empleado` | `1234` |
+| Repartidor | `repartidor` | `1234` |
+| Administrador | `admin` | `1234` |
+
+Son credenciales de demostración implementadas en el frontend; no proporcionan autenticación segura y no deben usarse en producción.
+
+## Persistencia y alcance
+
+Los pedidos, el carrito y el catálogo se guardan en `localStorage`. Los datos solo se comparten dentro del mismo navegador y dispositivo. No hay backend ni sincronización entre usuarios; por eso esta versión sirve como prototipo frontend y no como sistema multiusuario en producción.
+
+## Comandos de validación
+
+```bash
+npm run lint
+npm run build
+npm run preview
+```
+
+## Estructura principal
+
+```text
+comanda-frontend/
+├── public/img/          Imágenes del catálogo
+├── src/components/      Vistas y componentes reutilizables
+├── src/data/            Productos y estados de pedidos
+├── src/utils/           Funciones auxiliares
+├── src/App.jsx           Estado compartido y selección de vistas
+├── src/main.jsx          Entrada de React y estilos de Bootstrap
+├── src/styles.css        Identidad visual y responsive
+├── index.html             Título, idioma y metadatos SEO
+└── README.md
+```
+
+## Git y Pull Requests
+
+- `main` contiene la versión estable.
+- `dev` integra los avances aprobados.
+- Cada tarea se trabaja en una rama `feature/...` o `docs/...` y se propone mediante un PR hacia `dev`.
+- Cuando `dev` esté listo, se integra a `main` mediante un PR final.
+
+## Deploy en Vercel
+
+Vite genera la versión de producción en `dist`. Desde esta carpeta, iniciar sesión en Vercel y usar:
+
+```bash
+npm exec --yes --package=vercel -- vercel
+npm exec --yes --package=vercel -- vercel --prod
+```
+
+El primer comando crea un deploy Preview; el segundo publica en producción. Para que Vercel despliegue automáticamente cada push, hay que autorizar la integración de GitHub con el repositorio `gomez654/COMANDA2.0`.
