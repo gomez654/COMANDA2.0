@@ -1,120 +1,223 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import { Container } from 'react-bootstrap'
+import CartPanel from './components/CartPanel'
+import HeroSection from './components/HeroSection'
+import MenuSection from './components/MenuSection'
+import SiteHeader from './components/SiteHeader'
+import OrderLookup from './components/OrderLookup'
+import EmployeePanel from './components/EmployeePanel'
+import DeliveryPanel from './components/DeliveryPanel'
+import AdminPanel from './components/AdminPanel'
+import { products as initialProducts } from './data/products'
+
+const CART_STORAGE_KEY = 'comanda-react-cart-v1'
+const ORDER_STORAGE_KEY = 'comanda-react-orders-v1'
+const PRODUCT_STORAGE_KEY = 'comanda-react-products-v1'
+
+function readSavedCart() {
+  try {
+    const savedCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]')
+    return Array.isArray(savedCart)
+      ? savedCart.filter((item) => Number.isInteger(item.id) && Number.isInteger(item.quantity) && item.quantity > 0)
+      : []
+  } catch {
+    return []
+  }
+}
+
+function readSavedOrders() {
+  try {
+    const savedOrders = JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY) || '[]')
+    return Array.isArray(savedOrders) ? savedOrders : []
+  } catch {
+    return []
+  }
+}
+
+function readSavedProducts() {
+  try {
+    const savedProducts = JSON.parse(localStorage.getItem(PRODUCT_STORAGE_KEY) || 'null')
+    return Array.isArray(savedProducts) ? savedProducts : initialProducts
+  } catch {
+    return initialProducts
+  }
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeCategory, setActiveCategory] = useState('todos')
+  const [activeView, setActiveView] = useState('cliente')
+  const [cartItems, setCartItems] = useState(readSavedCart)
+  const [orders, setOrders] = useState(readSavedOrders)
+  const [productCatalog, setProductCatalog] = useState(readSavedProducts)
+  const [deliveryType, setDeliveryType] = useState('retiro')
+  const [cartMessage, setCartMessage] = useState('')
+  const [confirmation, setConfirmation] = useState('')
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems))
+  }, [cartItems])
+
+  useEffect(() => {
+    localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(orders))
+  }, [orders])
+
+  useEffect(() => {
+    localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(productCatalog))
+  }, [productCatalog])
+
+  const visibleProducts = productCatalog.filter((product) => (
+    product.available !== false && product.stock > 0 &&
+    (activeCategory === 'todos' || product.category === activeCategory)
+  ))
+  const cartLines = cartItems
+    .map((item) => {
+      const product = productCatalog.find((entry) => entry.id === item.id)
+      return product ? { ...product, quantity: Math.min(item.quantity, product.stock) } : null
+    })
+    .filter((item) => item && item.quantity > 0 && item.available !== false)
+  const cartCount = cartLines.reduce((total, item) => total + item.quantity, 0)
+
+  function addToCart(product) {
+    setConfirmation('')
+    setCartMessage('')
+    setCartItems((currentItems) => {
+      const currentQuantity = currentItems.find((item) => item.id === product.id)?.quantity || 0
+      if (product.available === false || product.stock <= 0 || currentQuantity >= product.stock) {
+        setCartMessage(`No hay más stock disponible de ${product.name}.`)
+        return currentItems
+      }
+      const alreadyAdded = currentItems.some((item) => item.id === product.id)
+      return alreadyAdded
+        ? currentItems.map((item) => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
+        : [...currentItems, { id: product.id, quantity: 1 }]
+    })
+  }
+
+  function changeQuantity(productId, amount) {
+    setCartMessage('')
+    setCartItems((currentItems) => currentItems
+      .map((item) => item.id === productId ? { ...item, quantity: item.quantity + amount } : item)
+      .filter((item) => item.quantity > 0))
+  }
+
+  function updateOrderStatus(orderNumber, status) {
+    setOrders((currentOrders) => currentOrders.map((order) => (
+      order.number === orderNumber ? { ...order, status } : order
+    )))
+  }
+
+  function addProduct(product) {
+    setProductCatalog((currentProducts) => {
+      const nextId = currentProducts.reduce((highest, entry) => Math.max(highest, Number(entry.id) || 0), 0) + 1
+      return [{ ...product, id: nextId }, ...currentProducts]
+    })
+  }
+
+  function updateProduct(updatedProduct) {
+    const normalizedProduct = {
+      ...updatedProduct,
+      stock: Number(updatedProduct.stock),
+      price: Number(updatedProduct.price),
+      available: Number(updatedProduct.stock) > 0 && updatedProduct.available !== false,
+    }
+    setProductCatalog((currentProducts) => currentProducts.map((product) => (
+      product.id === normalizedProduct.id ? normalizedProduct : product
+    )))
+    setCartItems((currentItems) => currentItems
+      .map((item) => item.id === normalizedProduct.id
+        ? { ...item, quantity: Math.min(item.quantity, normalizedProduct.stock) }
+        : item)
+      .filter((item) => item.quantity > 0))
+  }
+
+  function deleteProduct(productId) {
+    setProductCatalog((currentProducts) => currentProducts.filter((product) => product.id !== productId))
+    setCartItems((currentItems) => currentItems.filter((item) => item.id !== productId))
+  }
+
+  function checkout(event) {
+    event.preventDefault()
+    if (cartLines.length === 0) return
+    const formData = new FormData(event.currentTarget)
+    const customerName = String(formData.get('customer') || '').trim()
+    const customerPhone = String(formData.get('phone') || '').trim()
+    const lastOrderNumber = orders.reduce((highest, order) => Math.max(highest, Number(order.number) || 1000), 1000)
+    const orderNumber = String(lastOrderNumber + 1)
+    const deliveryLabel = deliveryType === 'retiro' ? 'retiro por el local' : 'entrega a domicilio'
+    const order = {
+      number: orderNumber,
+      customerName,
+      phone: customerPhone,
+      deliveryType,
+      address: deliveryType === 'domicilio' ? String(formData.get('address') || '').trim() : '',
+      status: 'NUEVO',
+      createdAt: new Date().toISOString(),
+      items: cartLines.map(({ id, name, price, quantity }) => ({ id, name, price, quantity })),
+      total: cartLines.reduce((total, item) => total + item.price * item.quantity, 0),
+    }
+    setOrders((currentOrders) => [order, ...currentOrders])
+    setConfirmation(`Pedido #${orderNumber} generado para ${customerName}, con ${deliveryLabel}. Consultá su estado en Seguimiento.`)
+    setCartItems([])
+    setCartMessage('')
+    event.currentTarget.reset()
+    setDeliveryType('retiro')
+  }
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <SiteHeader cartCount={cartCount} activeView={activeView} onViewChange={setActiveView} />
+      <main>
+        {activeView === 'cliente' ? (
+          <>
+        <HeroSection productCount={visibleProducts.length} />
+        <MenuSection
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          visibleProducts={visibleProducts}
+          onAdd={addToCart}
+        />
+        <section className="order-section" aria-labelledby="order-section-title">
+          <Container>
+            <div className="order-layout">
+              <div className="order-intro">
+                <p className="eyebrow">UN BUEN PLAN EMPIEZA ACA</p>
+                <h2 id="order-section-title">Tu pedido, a tu manera.</h2>
+                <p>Revisá las cantidades, elegí cómo recibirlo y completá tus datos para generar el pedido.</p>
+              </div>
+              <CartPanel
+                items={cartLines}
+                onQuantityChange={changeQuantity}
+                onCheckout={checkout}
+                deliveryType={deliveryType}
+                onDeliveryTypeChange={setDeliveryType}
+                message={cartMessage}
+                confirmation={confirmation}
+              />
+            </div>
+          </Container>
+        </section>
+        <OrderLookup orders={orders} />
+          </>
+        ) : activeView === 'empleado' ? (
+          <EmployeePanel orders={orders} onStatusChange={updateOrderStatus} />
+        ) : activeView === 'repartidor' ? (
+          <DeliveryPanel orders={orders} onStatusChange={updateOrderStatus} />
+        ) : (
+          <AdminPanel
+            products={productCatalog}
+            orders={orders}
+            onAddProduct={addProduct}
+            onUpdateProduct={updateProduct}
+            onDeleteProduct={deleteProduct}
+          />
+        )}
+      </main>
+      <footer className="site-footer">
+        <Container>
+          <span>© 2026 COMANDA</span>
+          <span>Pedidos y ventas para locales de comida</span>
+        </Container>
+      </footer>
     </>
   )
 }
