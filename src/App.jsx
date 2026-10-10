@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
-import CartPanel from './components/CartPanel'
 import HeroSection from './components/HeroSection'
 import MenuSection from './components/MenuSection'
 import SiteHeader from './components/SiteHeader'
@@ -175,27 +174,14 @@ function App() {
           onCategoryChange={setActiveCategory}
           visibleProducts={visibleProducts}
           onAdd={addToCart}
+          cartItems={cartLines}
+          onQuantityChange={changeQuantity}
+          onCheckout={checkout}
+          deliveryType={deliveryType}
+          onDeliveryTypeChange={setDeliveryType}
+          message={cartMessage}
+          confirmation={confirmation}
         />
-        <section className="order-section" aria-labelledby="order-section-title">
-          <Container>
-            <div className="order-layout">
-              <div className="order-intro">
-                <p className="eyebrow">UN BUEN PLAN EMPIEZA ACA</p>
-                <h2 id="order-section-title">Tu pedido, a tu manera.</h2>
-                <p>Revisá las cantidades, elegí cómo recibirlo y completá tus datos para generar el pedido.</p>
-              </div>
-              <CartPanel
-                items={cartLines}
-                onQuantityChange={changeQuantity}
-                onCheckout={checkout}
-                deliveryType={deliveryType}
-                onDeliveryTypeChange={setDeliveryType}
-                message={cartMessage}
-                confirmation={confirmation}
-              />
-            </div>
-          </Container>
-        </section>
         <OrderLookup orders={orders} />
           </>
         ) : activeView === 'empleado' ? (
