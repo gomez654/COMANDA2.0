@@ -1179,6 +1179,230 @@ select {
   font-size: 11px;
 }
 
+.admin-panel-shell {
+  background: #f7f8f4;
+}
+
+.admin-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.admin-metrics > div {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  padding: 14px 15px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.admin-metrics span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.admin-metrics strong {
+  overflow-wrap: anywhere;
+  color: var(--forest-dark);
+  font-size: 18px;
+}
+
+.admin-surface {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.admin-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.admin-section-heading .eyebrow {
+  margin-bottom: 5px;
+}
+
+.admin-section-heading h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 25px;
+}
+
+.admin-section-heading .badge {
+  border-radius: 4px;
+  padding: 7px 9px;
+  font-size: 10px;
+}
+
+.admin-create-form {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.5fr) minmax(130px, 1fr) minmax(95px, 0.7fr) minmax(85px, 0.6fr);
+  align-items: end;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e5eae5;
+  border-radius: 6px;
+  background: #f9faf7;
+}
+
+.admin-create-form .form-label {
+  margin-bottom: 5px;
+  color: #46584e;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.admin-create-form .form-control,
+.admin-create-form .form-select {
+  min-height: 38px;
+  border-color: #dce4dd;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.admin-description-field {
+  grid-column: span 3;
+}
+
+.admin-add-button,
+.admin-save-button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #fff;
+  background: var(--forest);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-add-button:hover,
+.admin-save-button:hover,
+.admin-add-button:focus-visible,
+.admin-save-button:focus-visible {
+  color: #fff;
+  background: var(--forest-dark);
+}
+
+.admin-feedback {
+  font-size: 12px;
+}
+
+.admin-table-wrap {
+  margin-top: 20px;
+}
+
+.admin-products-table {
+  min-width: 850px;
+  vertical-align: middle;
+}
+
+.admin-products-table th {
+  padding: 10px 8px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-products-table td {
+  padding: 10px 8px;
+}
+
+.admin-products-table .form-control,
+.admin-products-table .form-select {
+  min-width: 90px;
+  min-height: 36px;
+  border-color: #dce4dd;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.admin-products-table td:first-child .form-control:first-child {
+  min-width: 150px;
+  font-weight: 600;
+}
+
+.admin-products-table .admin-description-input {
+  min-width: 190px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.admin-products-table .form-check-input {
+  width: 2.2em;
+  height: 1.2em;
+  margin: 0;
+  cursor: pointer;
+}
+
+.admin-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-row-actions .btn {
+  min-height: 34px;
+  border-radius: 4px;
+  padding: 6px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-row-actions .btn-outline-danger {
+  border-color: #d8aaa2;
+  color: #a54937;
+}
+
+.admin-row-actions .btn-outline-danger:hover {
+  color: #fff;
+  background: #a54937;
+}
+
+@media (max-width: 991.98px) {
+  .admin-create-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-description-field {
+    grid-column: 1 / -1;
+  }
+
+  .admin-add-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .admin-surface {
+    padding: 14px;
+  }
+
+  .admin-create-form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .admin-description-field {
+    grid-column: auto;
+  }
+}
+
 .site-footer .container {
   display: flex;
   flex-wrap: wrap;
