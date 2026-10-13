@@ -42,6 +42,25 @@ Vite mostrará en la terminal la dirección local para abrir COMANDA.
 
 Los metadatos por página se actualizan en el navegador porque COMANDA es una aplicación React de una sola página. Para indexación avanzada en buscadores se puede evaluar renderizado del lado del servidor o prerenderizado.
 
+## Hooks (TP7)
+
+### `useState`
+
+- En `App.jsx`, `activeCategory` guarda el filtro seleccionado; `cartItems`, `orders` y `productCatalog` guardan los datos principales del flujo de compra y administración.
+- `deliveryType`, `cartMessage` y `confirmation` guardan la selección de entrega y los mensajes que ve el cliente.
+- En `OrderLookup.jsx`, los estados guardan el número escrito, el pedido encontrado y si ya se realizó una búsqueda.
+- En `AdminPanel.jsx`, `EmployeePanel.jsx` y `DeliveryPanel.jsx`, los estados controlan el acceso de demostración, los errores de inicio de sesión y los cambios temporales de formularios.
+
+Estos valores cambian cuando la persona interactúa con la interfaz, por ejemplo al filtrar el menú, modificar el carrito, crear un pedido, consultar su estado o editar productos. React vuelve a renderizar los componentes que usan el estado actualizado.
+
+### `useEffect`
+
+- En `App.jsx`, tres efectos guardan el carrito, los pedidos y el catálogo en `localStorage`. Se ejecutan al montar la aplicación y cuando cambia el valor correspondiente. Las dependencias `[cartItems]`, `[orders]` y `[productCatalog]` hacen que cada efecto responda solo a sus propios datos.
+- En `PageMetadata.jsx`, el efecto actualiza el título y las descripciones SEO cuando cambia la ruta. La dependencia `[pathname]` evita repetir esa actualización si la dirección no cambió.
+- Los datos iniciales del carrito, pedidos y catálogo se leen con funciones inicializadoras de `useState`, así la lectura desde `localStorage` ocurre al iniciar el estado y no en cada renderizado.
+
+En una explicación, `useState` conserva datos que cambian durante el uso de la interfaz; `useEffect` sincroniza esos cambios con acciones externas a React, como el almacenamiento del navegador o el título de la pestaña.
+
 ## Funcionalidades
 
 ### Cliente
