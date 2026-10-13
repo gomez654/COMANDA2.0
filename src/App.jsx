@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
-import HeroSection from './components/HeroSection'
-import MenuSection from './components/MenuSection'
+import { Routes, Route } from 'react-router-dom'
 import SiteHeader from './components/SiteHeader'
-import OrderLookup from './components/OrderLookup'
-import EmployeePanel from './components/EmployeePanel'
-import DeliveryPanel from './components/DeliveryPanel'
-import AdminPanel from './components/AdminPanel'
+import PageMetadata from './components/PageMetadata'
+import HomePage from './pages/HomePage'
+import MenuPage from './pages/MenuPage'
+import TrackingPage from './pages/TrackingPage'
+import EmployeePage from './pages/EmployeePage'
+import DeliveryPage from './pages/DeliveryPage'
+import AdminPage from './pages/AdminPage'
+import NotFoundPage from './pages/NotFoundPage'
 import { products as initialProducts } from './data/products'
 
 const CART_STORAGE_KEY = 'comanda-react-cart-v1'
@@ -44,7 +47,6 @@ function readSavedProducts() {
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('todos')
-  const [activeView, setActiveView] = useState('cliente')
   const [cartItems, setCartItems] = useState(readSavedCart)
   const [orders, setOrders] = useState(readSavedOrders)
   const [productCatalog, setProductCatalog] = useState(readSavedProducts)
@@ -164,39 +166,53 @@ function App() {
 
   return (
     <>
-      <SiteHeader cartCount={cartCount} activeView={activeView} onViewChange={setActiveView} />
+      <SiteHeader cartCount={cartCount} />
+      <PageMetadata />
       <main>
-        {activeView === 'cliente' ? (
-          <>
-        <HeroSection productCount={visibleProducts.length} />
-        <MenuSection
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-          visibleProducts={visibleProducts}
-          onAdd={addToCart}
-          cartItems={cartLines}
-          onQuantityChange={changeQuantity}
-          onCheckout={checkout}
-          deliveryType={deliveryType}
-          onDeliveryTypeChange={setDeliveryType}
-          message={cartMessage}
-          confirmation={confirmation}
-        />
-        <OrderLookup orders={orders} />
-          </>
-        ) : activeView === 'empleado' ? (
-          <EmployeePanel orders={orders} onStatusChange={updateOrderStatus} />
-        ) : activeView === 'repartidor' ? (
-          <DeliveryPanel orders={orders} onStatusChange={updateOrderStatus} />
-        ) : (
-          <AdminPanel
-            products={productCatalog}
-            orders={orders}
-            onAddProduct={addProduct}
-            onUpdateProduct={updateProduct}
-            onDeleteProduct={deleteProduct}
+        <Routes>
+          <Route path="/" element={<HomePage productCount={visibleProducts.length} />} />
+          <Route
+            path="/menu"
+            element={
+              <MenuPage
+                activeCategory={activeCategory}
+                onCategoryChange={setActiveCategory}
+                visibleProducts={visibleProducts}
+                onAdd={addToCart}
+                cartItems={cartLines}
+                onQuantityChange={changeQuantity}
+                onCheckout={checkout}
+                deliveryType={deliveryType}
+                onDeliveryTypeChange={setDeliveryType}
+                message={cartMessage}
+                confirmation={confirmation}
+                orders={orders}
+              />
+            }
           />
-        )}
+          <Route path="/seguimiento" element={<TrackingPage orders={orders} />} />
+          <Route
+            path="/empleado"
+            element={<EmployeePage orders={orders} onStatusChange={updateOrderStatus} />}
+          />
+          <Route
+            path="/repartidor"
+            element={<DeliveryPage orders={orders} onStatusChange={updateOrderStatus} />}
+          />
+          <Route
+            path="/admin"
+            element={
+              <AdminPage
+                products={productCatalog}
+                orders={orders}
+                onAddProduct={addProduct}
+                onUpdateProduct={updateProduct}
+                onDeleteProduct={deleteProduct}
+              />
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </main>
       <footer className="site-footer">
         <Container>

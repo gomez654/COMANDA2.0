@@ -11,6 +11,7 @@ COMANDA es un sistema web para centralizar los pedidos y las ventas de un local 
 ## Tecnologías
 
 - React y JavaScript
+- React Router para navegación entre páginas
 - Vite
 - React Bootstrap y Bootstrap 5
 - CSS responsive
@@ -32,6 +33,14 @@ npm run dev
 ```
 
 Vite mostrará en la terminal la dirección local para abrir COMANDA.
+
+## SEO y navegación
+
+- `index.html` define el idioma español, el viewport, una descripción inicial y metadatos Open Graph y Twitter para compartir el sitio.
+- `PageMetadata` actualiza el título, la descripción y los metadatos Open Graph al navegar entre rutas.
+- Las páginas están separadas y enlazadas con React Router. `vercel.json` redirige las rutas de la aplicación a su entrada para que se puedan abrir directamente.
+
+Los metadatos por página se actualizan en el navegador porque COMANDA es una aplicación React de una sola página. Para indexación avanzada en buscadores se puede evaluar renderizado del lado del servidor o prerenderizado.
 
 ## Funcionalidades
 
