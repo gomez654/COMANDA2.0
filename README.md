@@ -12,6 +12,8 @@ COMANDA es un sistema web para centralizar los pedidos y las ventas de un local 
 
 - React y JavaScript
 - React Router para navegación entre páginas
+- Axios para consultar TheMealDB
+- SweetAlert2 para informar errores de la API
 - Vite
 - React Bootstrap y Bootstrap 5
 - CSS responsive
@@ -60,6 +62,14 @@ Estos valores cambian cuando la persona interactúa con la interfaz, por ejemplo
 - Los datos iniciales del carrito, pedidos y catálogo se leen con funciones inicializadoras de `useState`, así la lectura desde `localStorage` ocurre al iniciar el estado y no en cada renderizado.
 
 En una explicación, `useState` conserva datos que cambian durante el uso de la interfaz; `useEffect` sincroniza esos cambios con acciones externas a React, como el almacenamiento del navegador o el título de la pestaña.
+
+## API pública (TP8)
+
+La sección de ideas de recetas consulta TheMealDB con Axios. En el componente, `useState` guarda las recetas, el estado de carga, los errores y el contador para reintentar; `useEffect` realiza la consulta al montar la sección y cuando cambia ese contador. Si la solicitud falla, SweetAlert2 informa el problema y la interfaz ofrece reintentar.
+
+La URL se configura en `.env` con `VITE_API_URL` y se lee desde Vite mediante `import.meta.env.VITE_API_URL`. `.env` está excluido de Git; el repositorio incluye `.env.example` como plantilla. Para ejecutar el proyecto, crear `.env` a partir de esa plantilla y luego ejecutar `npm run dev`.
+
+En Vercel también hay que crear la variable `VITE_API_URL` en la configuración del proyecto para los entornos Preview y Production. Las variables con prefijo `VITE_` quedan disponibles en el navegador, así que aquí se debe guardar una URL pública, nunca una clave privada.
 
 ## Funcionalidades
 
