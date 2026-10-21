@@ -1,8 +1,8 @@
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import { categories } from '../data/products'
 import ProductCard from './ProductCard'
-
 import CartPanel from './CartPanel'
+import RecipeSuggestion from './RecipeSuggestion'
 
 export default function MenuSection({
   activeCategory,
@@ -66,6 +66,7 @@ export default function MenuSection({
           </Col>
         </Row>
       </Container>
+      <RecipeSuggestion />
     </section>
   )
 }
