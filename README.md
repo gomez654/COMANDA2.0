@@ -13,6 +13,7 @@ COMANDA es un sistema web para centralizar los pedidos y las ventas de un local 
 - React y JavaScript
 - Vite
 - React Bootstrap y Bootstrap 5
+- Axios y SweetAlert2 para el consumo de la API pública
 - CSS responsive
 - Oxlint
 - `localStorage` para guardar los datos de demostración en el navegador
@@ -33,11 +34,20 @@ npm run dev
 
 Vite mostrará en la terminal la dirección local para abrir COMANDA.
 
+La sección de inspiración gastronómica consulta una receta aleatoria de TheMealDB usando Axios. Configurá la URL en `.env` (el archivo está ignorado por Git):
+
+```env
+VITE_API_URL=https://www.themealdb.com/api/json/v1/1/random.php
+```
+
+Podés usar `.env.example` como referencia. Si modificás las variables de entorno, reiniciá el servidor de Vite.
+
 ## Funcionalidades
 
 ### Cliente
 
 - Explorar el catálogo por categorías.
+- Consultar una receta aleatoria de TheMealDB como inspiración gastronómica.
 - Agregar productos al carrito y ajustar cantidades respetando el stock.
 - Elegir retiro por el local o envío a domicilio.
 - Confirmar un pedido y recibir su número.
